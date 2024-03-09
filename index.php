@@ -5,9 +5,16 @@ include 'db.php';
 
     if (isset($_POST['submit'])){
 
-        $task = mysqli_real_escape_string($conn, $_POST['task']);
-
-        $sql = "INSERT INTO task_info(task) VALUES('$task')";
+    // Prepare INSERT statement
+    $stmt = $conn->prepare("INSERT INTO task_info (task) VALUES (?)");
+    $stmt->bind_param("s", $task);
+    
+    // Set parameter and execute the statement
+    $task = $_POST['task'];
+    $stmt->execute();
+    
+    // Close the statement
+    $stmt->close();
 
 
         if (mysqli_query($conn, $sql)){
@@ -21,9 +28,16 @@ include 'db.php';
 
     if (isset($_POST['delete'])){
 
-        $id = mysqli_real_escape_string($conn, $_POST['id_delete']);
+    // Prepare DELETE statement
+    $stmt = $conn->prepare("DELETE FROM task_info WHERE id = ?");
+    $stmt->bind_param("i", $id);
     
-        $sql = "DELETE FROM task_info where id = $id";
+    // Set parameter and execute the statement
+    $id = $_POST['id_delete'];
+    $stmt->execute();
+    
+    // Close the statement
+    $stmt->close();
     
        
     
